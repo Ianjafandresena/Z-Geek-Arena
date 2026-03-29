@@ -11,28 +11,14 @@
         
         <div class="events-grid">
           <EventCard 
-            slug="marseille-2026"
-            name="Marseille 2026"
-            location="Marseille, France"
-            date="01 - 03 Mai"
-            status="À VENIR"
-            gradient="linear-gradient(135deg, #ff0055 0%, #000000 100%)"
-          />
-          <EventCard 
-            slug="castres-2026"
-            name="Castres 2026"
-            location="Castres, France"
-            date="26 - 28 Juin"
-            status="INSCRIPTIONS OUVERTES"
-            gradient="linear-gradient(135deg, #0fb 0%, #000000 100%)"
-          />
-          <EventCard 
-            slug="nice-2026"
-            name="Nice 2026"
-            location="Nice, France"
-            date="09 - 11 Octobre"
-            status="À VENIR"
-            gradient="linear-gradient(135deg, #bf00ff 0%, #000000 100%)"
+            v-for="event in events"
+            :key="event.id"
+            :slug="event.slug"
+            :name="event.nom"
+            :location="event.lieu ? `${event.lieu.ville}, ${event.lieu.pays}` : ''"
+            :date="formatDateRange(event.date_debut, event.date_fin)"
+            :status="formatStatut(event.statut)"
+            :gradient="event.gradient || 'linear-gradient(135deg, #333 0%, #000 100%)'"
           />
         </div>
       </div>
@@ -43,23 +29,13 @@
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">Actualités & Médias</h2>
-          <NuxtLink to="#" class="link-more">Lire toutes les news</NuxtLink>
+          <NuxtLink to="/actualites" class="link-more">Lire toutes les news</NuxtLink>
         </div>
         <div class="news-grid">
-          <div class="news-card glass">
-            <div class="news-date">28 / 10 / 25</div>
-            <h3 class="news-title">Comment la communauté façonne l'avenir du gaming compétitif en 2026</h3>
-            <NuxtLink to="#" class="text-cyan">Lire l'article &rarr;</NuxtLink>
-          </div>
-          <div class="news-card glass">
-            <div class="news-date">15 / 10 / 25</div>
-            <h3 class="news-title">Les nouvelles technologies VR qui vont révolutionner l'arène</h3>
-            <NuxtLink to="#" class="text-cyan">Lire l'article &rarr;</NuxtLink>
-          </div>
-          <div class="news-card glass">
-            <div class="news-date">02 / 10 / 25</div>
-            <h3 class="news-title">Portrait : Dans les coulisses de la préparation des futurs champions</h3>
-            <NuxtLink to="#" class="text-cyan">Lire l'article &rarr;</NuxtLink>
+          <div v-for="article in actualites" :key="article.id" class="news-card glass">
+            <div class="news-date">{{ formatDate(article.date_publication || article.created_at) }}</div>
+            <h3 class="news-title">{{ article.titre }}</h3>
+            <NuxtLink :to="`/actualites/${article.slug}`" class="text-cyan">Lire l'article &rarr;</NuxtLink>
           </div>
         </div>
       </div>
@@ -88,6 +64,16 @@
     </section>
   </main>
 </template>
+
+<script setup>
+import { formatDateRange, formatDate, formatStatut } from '~/utils/formatters'
+
+const { events, fetchAll: fetchEvents } = useEvents()
+const { actualites, fetchAll: fetchActualites } = useActualites()
+
+await fetchEvents()
+await fetchActualites()
+</script>
 
 <style scoped>
 .section-header {

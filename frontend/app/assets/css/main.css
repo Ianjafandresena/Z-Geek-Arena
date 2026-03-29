@@ -184,6 +184,43 @@ button {
   }
 }
 
+/* ===== FORMS & INPUTS GLOBAL ===== */
+input, select, textarea {
+  background-color: #1a1d2d; /* Fond sombre pour tous les champs */
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 2px rgba(0, 251, 255, 0.1);
+  background-color: #212538;
+}
+
+/* Stylisation spécifique des options du select */
+select option {
+  background-color: #1a1d2d; /* Fond du menu déroulant */
+  color: white;
+  padding: 10px;
+}
+
+/* Retrait de l'apparence native pour certains navigateurs */
+select {
+  cursor: pointer;
+}
+
+/* Placeholder color */
+::placeholder {
+  color: #5a6380;
+  opacity: 1;
+}
+
 /* ===== RESPONSIVE GLOBAL ===== */
 @media (max-width: 992px) {
   .container {

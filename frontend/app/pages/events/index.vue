@@ -15,18 +15,13 @@
         <div class="events-grid">
           <EventCard 
             v-for="event in upcomingEvents" 
-            :key="event.name"
-            v-bind="event"
-          />
-        </div>
-
-        <h2 class="category-title" style="margin-top: 60px;">Événements TBA (À Annoncer)</h2>
-        <div class="events-grid">
-          <EventCard 
-            v-for="event in tbaEvents" 
-            :key="event.name"
-            v-bind="event"
-            status="TBA"
+            :key="event.id"
+            :slug="event.slug"
+            :name="event.nom"
+            :location="event.lieu ? `${event.lieu.ville}, ${event.lieu.pays}` : ''"
+            :date="formatDateRange(event.date_debut, event.date_fin)"
+            :status="formatStatut(event.statut)"
+            :gradient="event.gradient || 'linear-gradient(135deg, #333 0%, #000 100%)'"
           />
         </div>
       </div>
@@ -46,49 +41,14 @@
 </template>
 
 <script setup>
-const upcomingEvents = [
-  {
-    slug: "marseille-2026",
-    name: "Marseille 2026",
-    location: "Marseille, France",
-    date: "01 - 03 Mai",
-    status: "À VENIR",
-    gradient: "linear-gradient(135deg, #ff0055 0%, #000000 100%)"
-  },
-  {
-    slug: "castres-2026",
-    name: "Castres 2026",
-    location: "Castres, France",
-    date: "26 - 28 Juin",
-    status: "INSCRIPTIONS OUVERTES",
-    gradient: "linear-gradient(135deg, #0fb 0%, #000000 100%)"
-  },
-  {
-    slug: "nice-2026",
-    name: "Nice 2026",
-    location: "Nice, France",
-    date: "09 - 11 Octobre",
-    status: "À VENIR",
-    gradient: "linear-gradient(135deg, #bf00ff 0%, #000000 100%)"
-  }
-]
+import { formatDateRange, formatStatut } from '~/utils/formatters'
 
-const tbaEvents = [
-  {
-    slug: "toulouse-2027",
-    name: "Toulouse 2027",
-    location: "Toulouse, France",
-    date: "À venir",
-    gradient: "linear-gradient(135deg, #333 0%, #000 100%)"
-  },
-  {
-    slug: "chambery-2027",
-    name: "Chambery 2027",
-    location: "Chambery, France",
-    date: "À venir",
-    gradient: "linear-gradient(135deg, #333 0%, #000 100%)"
-  }
-]
+const { events, fetchAll } = useEvents()
+await fetchAll()
+
+const upcomingEvents = computed(() =>
+  events.value.filter(e => e.statut !== 'termine' && e.statut !== 'annule')
+)
 </script>
 
 <style scoped>

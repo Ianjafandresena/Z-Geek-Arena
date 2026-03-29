@@ -18,7 +18,7 @@
 
       <div class="actions">
         <!-- Bouton desktop -->
-        <button class="btn-primary desktop-only">S'inscrire</button>
+        <button class="btn-primary desktop-only" @click="scrollToInscription">S'inscrire</button>
         
         <!-- Bouton Hamburger Mobile uniquement -->
         <button class="hamburger mobile-only" @click="toggleMenu" aria-label="Menu">
@@ -65,7 +65,7 @@
       </nav>
 
       <div class="sidebar-footer">
-        <button class="btn-primary sidebar-cta" @click="closeMenu">S'inscrire</button>
+        <button class="btn-primary sidebar-cta" @click="scrollToInscription(true)">S'inscrire</button>
       </div>
     </aside>
   </Teleport>
@@ -93,6 +93,17 @@ if (process.client) {
   window.addEventListener('scroll', () => {
     isScrolled.value = window.scrollY > 50
   })
+}
+
+const scrollToInscription = (isMobile = false) => {
+  if (isMobile) closeMenu()
+  
+  const element = document.querySelector('.inscription-section')
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' })
+  } else {
+    navigateTo('/events')
+  }
 }
 </script>
 
