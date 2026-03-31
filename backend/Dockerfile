@@ -37,5 +37,5 @@ RUN chmod -R 775 storage bootstrap/cache
 # 7. Exposer le port par défaut de Render
 EXPOSE 80
 
-# 8. Commande de démarrage (optimisations Laravel incluses)
-CMD php artisan config:cache && php artisan route:cache && php artisan view:cache && apache2-foreground
+# 8. Commande de démarrage (migrations et optimisations Laravel incluses)
+CMD php artisan migrate --force && php artisan db:seed --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && apache2-foreground
