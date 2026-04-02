@@ -2,6 +2,7 @@ services:
   - type: web
     name: zga-geek-arena
     runtime: node
+    rootContext: frontend # Indique que le projet est dans le dossier frontend
     buildCommand: npm install && npm run build
     startCommand: node .output/server/index.mjs
     envVars:
