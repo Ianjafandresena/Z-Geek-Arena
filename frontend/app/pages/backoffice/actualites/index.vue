@@ -39,7 +39,7 @@
             <td class="text-muted">{{ a.date_publication ? formatDate(a.date_publication) : '-' }}</td>
             <td>
               <div class="actions-cell">
-                <button class="action-btn edit" title="Modifier">
+                <button class="action-btn edit" title="Modifier" @click="navigateTo(`/backoffice/actualites/${a.id}`)">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </button>
                 <button class="action-btn delete" title="Supprimer" @click="handleDelete(a.id)">
@@ -62,6 +62,7 @@ import { formatDate } from '~/utils/formatters'
 
 definePageMeta({ layout: 'backoffice', middleware: ['admin'] })
 
+const { confirmDelete, showSuccess } = useUIMessage()
 const { actualites, loading, fetchAll, remove } = useActualites()
 await fetchAll()
 
@@ -71,7 +72,13 @@ const catClass = (cat) => {
 }
 
 const handleDelete = async (id) => {
-  if (confirm('Supprimer cet article ?')) await remove(id)
+  const confirmed = await confirmDelete('article')
+  if (confirmed) {
+    const success = await remove(id)
+    if (success) {
+      await showSuccess('L\'article a été supprimé.')
+    }
+  }
 }
 </script>
 

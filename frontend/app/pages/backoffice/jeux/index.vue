@@ -43,11 +43,18 @@ definePageMeta({ layout: 'backoffice', middleware: ['admin'] })
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase.replace('/api', '')
 
+const { confirmDelete, showSuccess } = useUIMessage()
 const { jeux, loading, fetchAll, remove } = useJeux()
 await fetchAll()
 
 const handleDelete = async (id) => {
-  if (confirm('Supprimer ce jeu et tous ses tournois associés ?')) await remove(id)
+  const confirmed = await confirmDelete('jeu')
+  if (confirmed) {
+    const success = await remove(id)
+    if (success) {
+      await showSuccess('Le jeu a été supprimé ainsi que tous les tournois liés.')
+    }
+  }
 }
 </script>
 

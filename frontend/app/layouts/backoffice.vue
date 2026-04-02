@@ -84,8 +84,10 @@
         <slot />
       </main>
     </div>
-    <!-- Mobile Overlay -->
     <div v-if="isSidebarOpen" class="sidebar-overlay" @click="closeSidebar"></div>
+
+    <!-- Global Modal System -->
+    <BaseModal />
   </div>
 </template>
 

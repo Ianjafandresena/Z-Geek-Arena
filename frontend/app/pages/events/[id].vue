@@ -37,9 +37,10 @@
             <div class="planning-row" v-for="(day, index) in planningDays" :key="index">
               <div class="day-label">{{ day.label }}</div>
               <div class="day-tracks">
-                <div 
+                <NuxtLink 
                   v-for="item in day.items" 
                   :key="item.id"
+                  :to="`/tournois/${item.id}/bracket`"
                   class="planning-item"
                   :class="item.type"
                   :style="{ 
@@ -49,10 +50,10 @@
                   <div class="item-content">
                     <div class="item-info">
                       <span class="game-name">{{ item.gameName }}</span>
-                      <span class="phase-name">{{ item.phase }}</span>
+                      <span class="phase-name">{{ item.phase }} <span class="bracket-hint">⚡ Voir l'arbre</span></span>
                     </div>
                   </div>
-                </div>
+                </NuxtLink>
               </div>
             </div>
           </div>

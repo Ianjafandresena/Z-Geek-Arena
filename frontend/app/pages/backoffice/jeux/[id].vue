@@ -73,6 +73,7 @@ import { JeuService } from '~/services/JeuService'
 definePageMeta({ layout: 'backoffice', middleware: ['admin'] })
 
 const route = useRoute()
+const { showSuccess } = useUIMessage()
 const service = new JeuService()
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase.replace('/api', '')
@@ -129,6 +130,7 @@ const handleSubmit = async () => {
   try {
     // On utilise POST car multipart + PUT ne font pas bon ménage nativement en PHP
     await service.updateWithImage(route.params.id, formData)
+    await showSuccess('Le jeu a été mis à jour avec succès.')
     navigateTo('/backoffice/jeux')
   } catch (e) {
     error.value = "Erreur lors de la modification."

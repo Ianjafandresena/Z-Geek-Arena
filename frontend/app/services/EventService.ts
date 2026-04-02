@@ -10,6 +10,10 @@ export class EventService extends ApiService {
     return this.get<Event>(`events/${slug}`)
   }
 
+  async getById(id: number | string): Promise<Event> {
+    return this.get<Event>(`events/${id}`)
+  }
+
   async create(data: Partial<Event>): Promise<Event> {
     return this.post<Event>('events', data)
   }

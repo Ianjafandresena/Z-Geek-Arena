@@ -22,6 +22,7 @@ export interface Event {
   nom: string
   slug: string
   description?: string
+  salle?: string
   date_debut: string
   date_fin: string
   statut: 'a_venir' | 'inscriptions_ouvertes' | 'en_cours' | 'termine' | 'annule'

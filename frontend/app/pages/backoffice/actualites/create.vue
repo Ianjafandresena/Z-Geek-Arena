@@ -34,6 +34,18 @@
         </div>
 
         <div class="form-section">
+          <h3 class="section-title">Image de référence</h3>
+          <div class="upload-zone" @click="triggerFile" :class="{ 'has-file': preview }">
+            <input type="file" ref="fileInput" @change="handleFile" accept="image/*" class="hidden">
+            <img v-if="preview" :src="preview" class="upload-preview">
+            <div v-else class="upload-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <p>Cliquer pour uploader une image de couverture</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
           <h3 class="section-title">Détails</h3>
           <div class="form-group">
             <label>Extrait (résumé court)</label>
@@ -99,10 +111,29 @@ const form = ref({
   publie: true
 })
 
+const selectedFile = ref(null)
+const preview = ref(null)
+const fileInput = ref(null)
+
+const triggerFile = () => fileInput.value.click()
+const handleFile = (e) => {
+  const file = e.target.files[0]
+  if (file) {
+    selectedFile.value = file
+    preview.value = URL.createObjectURL(file)
+  }
+}
+
 const handleSubmit = async () => {
-  const data = { ...form.value }
-  if (!data.event_id) delete data.event_id
-  const result = await create(data)
+  const formData = new FormData()
+  Object.keys(form.value).forEach(key => {
+    formData.append(key, form.value[key])
+  })
+  if (selectedFile.value) {
+    formData.append('image', selectedFile.value)
+  }
+
+  const result = await create(formData)
   if (result) navigateTo('/backoffice/actualites')
 }
 </script>
@@ -123,6 +154,13 @@ label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-
 input[type="text"], input[type="date"], select, textarea { padding: 0.8rem 1rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: white; font-family: inherit; font-size: 0.9rem; }
 input:focus, select:focus, textarea:focus { outline: none; border-color: #00e5ff; }
 textarea { resize: vertical; }
+
+.upload-zone { border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer; transition: 0.2s; }
+.upload-zone:hover { border-color: #00e5ff; }
+.upload-placeholder { color: #5a6380; }
+.upload-placeholder svg { width: 40px; height: 40px; margin-bottom: 0.5rem; }
+.upload-preview { max-height: 300px; border-radius: 8px; }
+.hidden { display: none; }
 
 .checkbox-label { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; text-transform: none; font-size: 0.9rem; color: #d0d6e0; }
 .checkbox-label input[type="checkbox"] { width: 18px; height: 18px; accent-color: #00e5ff; }

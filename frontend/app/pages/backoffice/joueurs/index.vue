@@ -73,6 +73,7 @@ import { formatDate } from '~/utils/formatters'
 
 definePageMeta({ layout: 'backoffice', middleware: ['admin'] })
 
+const { confirmDelete, showSuccess } = useUIMessage()
 const { joueurs, loading, error, fetchAll, create, remove } = useJoueurs()
 await fetchAll()
 
@@ -87,11 +88,18 @@ const handleAdd = async () => {
   if (result) {
     showAddModal.value = false
     newJoueur.value = { nom: '', email: '', pseudo: '' }
+    await showSuccess('Le joueur a été ajouté.')
   }
 }
 
 const handleDelete = async (id) => {
-  if (confirm('Supprimer ce joueur ?')) await remove(id)
+  const confirmed = await confirmDelete('joueur')
+  if (confirmed) {
+    const success = await remove(id)
+    if (success) {
+      await showSuccess('Le joueur a été supprimé.')
+    }
+  }
 }
 </script>
 
