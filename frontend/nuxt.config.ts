@@ -7,10 +7,14 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/main.css'],
 
-  // Configuration de l'API backend
+  // Configuration de l'API — maintenant intégrée via Nitro server routes
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE_URL || 'http://127.0.0.1:8000/api'
+      apiBase: '/api'
     }
+  },
+
+  nitro: {
+    preset: 'node-server'
   }
 })

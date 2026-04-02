@@ -17,12 +17,13 @@ export class ApiService {
     const headers: Record<string, string> = {
       'Accept': 'application/json',
     }
-    if (import.meta.client) {
-      const token = useCookie('admin_token')
-      if (token.value) {
-        headers['Authorization'] = `Bearer ${token.value}`
-      }
+    
+    // useCookie works on both client and server in Nuxt
+    const token = useCookie('admin_token')
+    if (token.value) {
+      headers['Authorization'] = `Bearer ${token.value}`
     }
+    
     return headers
   }
 

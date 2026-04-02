@@ -7,13 +7,12 @@ interface AdminUser {
   role: string
 }
 
-// État global partagé entre toutes les instances
-const adminUser = ref<AdminUser | null>(null)
-const isAuthenticated = ref(false)
-const adminToken = ref<string | null>(null) 
-
 export function useAuth() {
   const service = new AuthService()
+  
+  // Use Nuxt useState for state sharing between client and server (hydratation)
+  const adminUser = useState<AdminUser | null>('auth_user', () => null)
+  const isAuthenticated = useState<boolean>('auth_authenticated', () => false)
   const loading = ref(false)
   const error = ref<string | null>(null)
   const token = useCookie('admin_token', { maxAge: 60 * 60 * 24 * 7 }) // 7 jours
@@ -30,7 +29,6 @@ export function useAuth() {
       
       // Mise à jour de l'état global
       token.value = res.token
-      adminToken.value = res.token
       adminUser.value = res.user
       isAuthenticated.value = true
       

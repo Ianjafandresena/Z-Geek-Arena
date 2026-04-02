@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: zga-geek-arena
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: node .output/server/index.mjs
+    envVars:
+      - key: DATABASE_URL
+        sync: false # Set this in Render Dashboard for security
+      - key: JWT_SECRET
+        sync: false # Set this in Render Dashboard for security OR generate one here
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 10000
+    plan: free # Change to starter/pro if needed
+    regions: frankfurt # Or ohio/oregon/etc.

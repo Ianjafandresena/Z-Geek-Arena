@@ -26,7 +26,6 @@
         </div>
 
         <p v-if="error" class="error-text">{{ error }}</p>
-        <p v-if="success" class="success-text">✅ Administrateur créé avec succès !</p>
 
         <div class="form-actions">
           <button type="submit" class="btn-submit" :disabled="loading">
@@ -59,7 +58,7 @@
 definePageMeta({ layout: 'backoffice', middleware: ['admin'] })
 
 const { adminUser, register, loading, error } = useAuth()
-const success = ref(false)
+const { showSuccess } = useUIMessage()
 
 const form = ref({
   name: '',
@@ -69,10 +68,9 @@ const form = ref({
 })
 
 const handleSubmit = async () => {
-  success.value = false
   const ok = await register(form.value.name, form.value.email, form.value.password, form.value.password_confirmation)
   if (ok) {
-    success.value = true
+    await showSuccess('L\'administrateur a été créé avec succès !')
     form.value = { name: '', email: '', password: '', password_confirmation: '' }
   }
 }

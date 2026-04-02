@@ -28,17 +28,16 @@
           <div class="form-grid">
             <div class="form-group relative">
               <div class="label-with-action">
-                <label>Lieu</label>
-                <NuxtLink to="/backoffice/lieux" class="small-action-link">+ Gérer les lieux</NuxtLink>
+                <label>Ville</label>
+                <NuxtLink to="/backoffice/lieux" class="small-action-link">+ Gérer les villes</NuxtLink>
               </div>
 
               <div class="custom-select-wrapper" :class="{ 'is-open': isDropdownOpen }">
                 <div class="custom-select-trigger" @click="toggleDropdown">
                   <div v-if="selectedLieu" class="selected-val">
-                    <strong>{{ selectedLieu.nom }}</strong>
-                    <span>{{ selectedLieu.ville }}</span>
+                    <strong>{{ selectedLieu.ville }}</strong>
                   </div>
-                  <span v-else class="placeholder">Sélectionner un lieu...</span>
+                  <span v-else class="placeholder">Sélectionner une ville...</span>
                   <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                 </div>
 
@@ -62,8 +61,7 @@
                       @click="selectLieu(lieu)"
                     >
                       <div class="option-info">
-                        <strong>{{ lieu.nom }}</strong>
-                        <span>{{ lieu.ville }}, {{ lieu.pays }}</span>
+                        <strong>{{ lieu.ville }}</strong>
                       </div>
                       <svg v-if="form.lieu_id === lieu.id" class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
@@ -74,6 +72,12 @@
                 </div>
               </div>
             </div>
+            <!-- Salle (Input) -->
+            <div class="form-group">
+              <label>Nom du lieu (Salle)</label>
+              <input type="text" v-model="form.salle" placeholder="Ex: Palais des expositions" required>
+            </div>
+
             <div class="form-group">
               <label>Statut</label>
               <select v-model="form.statut">
@@ -175,6 +179,7 @@ const form = ref({
   nom: '',
   slug: '',
   lieu_id: '',
+  salle: '',
   statut: 'a_venir',
   date_debut: '',
   date_fin: '',
@@ -205,12 +210,22 @@ const selectedLieu = computed(() => {
 })
 
 const filteredLieux = computed(() => {
-  if (!searchQuery.value) return lieux.value
-  const q = searchQuery.value.toLowerCase()
-  return lieux.value.filter(l => 
-    l.nom.toLowerCase().includes(q) || 
-    l.ville.toLowerCase().includes(q)
-  )
+  let list = lieux.value
+  if (searchQuery.value) {
+    const q = searchQuery.value.toLowerCase()
+    list = list.filter(l => 
+      l.nom.toLowerCase().includes(q) || 
+      l.ville.toLowerCase().includes(q)
+    )
+  }
+  
+  // Unique by ville name to avoid duplicates in the UI
+  const seen = new Set()
+  return list.filter(l => {
+    const duplicate = seen.has(l.ville)
+    seen.add(l.ville)
+    return !duplicate
+  })
 })
 
 // === File Upload Logic ===

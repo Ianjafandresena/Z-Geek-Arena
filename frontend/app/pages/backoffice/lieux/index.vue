@@ -70,6 +70,7 @@
 import { LieuService } from '~/services/LieuService'
 definePageMeta({ layout: 'backoffice', middleware: ['admin'] })
 
+const { showSuccess, confirmDelete } = useUIMessage()
 const service = new LieuService()
 const lieux = ref([])
 const loading = ref(false)
@@ -90,6 +91,7 @@ const handleSubmit = async () => {
     await service.create(form.value)
     showModal.value = false
     form.value = { nom: '', ville: '', adresse: '', pays: 'France' }
+    await showSuccess('Le lieu a été enregistré avec succès.')
     await fetchLieux()
   } finally {
     loading.value = false
@@ -97,8 +99,10 @@ const handleSubmit = async () => {
 }
 
 const handleDelete = async (id) => {
-  if (confirm('Supprimer ce lieu ?')) {
+  const confirmed = await confirmDelete('lieu')
+  if (confirmed) {
     await service.remove(id)
+    await showSuccess('Le lieu a été supprimé.')
     await fetchLieux()
   }
 }

@@ -51,32 +51,34 @@
     <!-- Recent Events -->
     <div class="card">
       <div class="card-header">
-        <h3>Événements</h3>
+        <h3>Événements récents</h3>
         <NuxtLink to="/backoffice/events" class="card-link">Tout voir →</NuxtLink>
       </div>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Événement</th>
-            <th>Lieu</th>
-            <th>Dates</th>
-            <th>Statut</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="event in events" :key="event.id">
-            <td>
-              <div class="player-cell">
-                <div class="event-dot" :style="{ background: event.gradient || '#555' }"></div>
-                <strong>{{ event.nom }}</strong>
-              </div>
-            </td>
-            <td>{{ event.lieu ? event.lieu.ville : '-' }}</td>
-            <td>{{ formatDateRange(event.date_debut, event.date_fin) }}</td>
-            <td><span :class="['badge', getBadgeClass(event.statut)]">{{ formatStatut(event.statut) }}</span></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Événement</th>
+              <th>Lieu</th>
+              <th>Dates</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="event in events" :key="event.id">
+              <td>
+                <div class="player-cell">
+                  <div class="event-dot" :style="{ background: event.gradient || '#555' }"></div>
+                  <strong>{{ event.nom }}</strong>
+                </div>
+              </td>
+              <td>{{ event.lieu ? (event.lieu.ville || event.lieu.nom) : '-' }}</td>
+              <td>{{ formatDateRange(event.date_debut, event.date_fin) }}</td>
+              <td><span :class="['badge', getBadgeClass(event.statut)]">{{ formatStatut(event.statut) }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -118,6 +120,14 @@ const getBadgeClass = (statut) => {
   grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
   margin-bottom: 2rem;
+}
+
+@media (max-width: 1200px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .stats-row { grid-template-columns: 1fr; }
 }
 
 .stat-card {
