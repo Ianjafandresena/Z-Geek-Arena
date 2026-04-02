@@ -2,17 +2,17 @@ services:
   - type: web
     name: zga-geek-arena
     runtime: node
-    rootDir: frontend # Indique que le projet est dans le dossier frontend
+    rootDir: frontend
     buildCommand: npm install && npm run build
     startCommand: node .output/server/index.mjs
     envVars:
       - key: DATABASE_URL
-        sync: false # Set this in Render Dashboard for security
+        sync: false
       - key: JWT_SECRET
-        sync: false # Set this in Render Dashboard for security OR generate one here
+        sync: false
       - key: NODE_VERSION
         value: 20
       - key: PORT
         value: 10000
-    plan: free # Change to starter/pro if needed
-    region: frankfurt # Singulier: ohio, oregon, frankfurt, singapore
+    plan: free
+    region: frankfurt
